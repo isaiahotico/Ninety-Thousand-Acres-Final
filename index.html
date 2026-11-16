@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ninety thousand Acres Team</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root{--accent:#198754;--soft:#eaf6ee}*{box-sizing:border-box}body{font-family:'DM Sans',sans-serif;background:#f5f7f6;color:#17211c} .accent{color:var(--accent)}.bg-accent{background:var(--accent)}.soft{background:var(--soft)}.panel{background:#fff;border:1px solid #e8eeea;border-radius:18px;box-shadow:0 8px 30px #193d2810}.btn{transition:.18s}.btn:hover{transform:translateY(-1px);filter:brightness(.97)}.hide-scroll::-webkit-scrollbar{display:none}.message{overflow-wrap:anywhere}.nav-active{color:var(--accent);background:var(--soft)}
+  </style>
+</head>
+<body>
+<div class="min-h-screen">
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 h-[72px] flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-2xl bg-accent text-white grid place-items-center"><i class="fa-solid fa-seedling"></i></div><div><div class="font-extrabold leading-tight">Ninety thousand Acres Team</div><div class="text-xs text-gray-500">A community that grows together</div></div></div>
+      <div class="flex items-center gap-2"><button id="themeButton" class="btn w-10 h-10 rounded-full hover:bg-gray-100" title="Choose app color"><i class="fa-solid fa-palette"></i></button><input id="themePicker" type="color" value="#198754" class="hidden"><button id="profileButton" class="flex items-center gap-2 rounded-full hover:bg-gray-50 p-1 pr-3"><img id="headerAvatar" class="w-9 h-9 rounded-full object-cover" src="https://ui-avatars.com/api/?name=Member&background=198754&color=fff"><span id="headerName" class="text-sm font-semibold hidden sm:block">Member</span></button></div>
+    </div>
+  </header>
+  <main class="max-w-7xl mx-auto p-4 lg:p-6">
+    <div class="text-xs text-gray-500 mb-4">Home <span class="mx-2">›</span><span id="crumb">Community</span></div>
+    <div class="grid lg:grid-cols-[220px_minmax(0,1fr)_260px] gap-5">
+      <aside class="panel p-3 h-fit">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-gray-400 px-3 py-2">Workspace</div>
+        <button data-view="chat" class="nav-item nav-active w-full text-left rounded-xl px-3 py-3 flex gap-3 items-center"><i class="fa-regular fa-comments w-5"></i> Community chat</button>
+        <button data-view="forum" class="nav-item w-full text-left rounded-xl px-3 py-3 flex gap-3 items-center text-gray-600"><i class="fa-regular fa-newspaper w-5"></i> Forum</button>
+        <button data-view="groups" class="nav-item w-full text-left rounded-xl px-3 py-3 flex gap-3 items-center text-gray-600"><i class="fa-solid fa-people-group w-5"></i> Groups</button>
+        <div class="border-t my-3"></div><div class="soft rounded-xl p-3 text-xs text-gray-600"><i class="fa-solid fa-lock accent mr-1"></i> Be kind. Keep personal information private.</div>
+      </aside>
+      <section id="mainContent" class="min-w-0"></section>
+      <aside class="panel p-4 h-fit hidden lg:block"><div class="flex items-center justify-between mb-3"><h2 class="font-bold">Online now</h2><span id="onlineCount" class="text-xs rounded-full soft accent px-2 py-1">…</span></div><div id="onlineList" class="space-y-3 text-sm"><div class="text-gray-400 text-sm">Connecting…</div></div><div class="mt-5 p-3 rounded-xl bg-gray-50 text-xs text-gray-500">Online status updates while the app is open.</div></aside>
+    </div>
+  </main>
+</div>
+<!-- Profile editor -->
+<div id="profileModal" class="fixed inset-0 z-50 hidden bg-black/40 p-4 place-items-center"><div class="panel p-6 w-full max-w-md"><div class="flex justify-between items-center mb-5"><h2 class="text-lg font-extrabold">Your profile</h2><button data-close="profileModal" class="text-gray-400"><i class="fa-solid fa-xmark"></i></button></div><label class="text-sm font-semibold">Display name</label><input id="nameInput" maxlength="40" class="w-full border rounded-xl p-3 mt-1 mb-4 outline-none focus:ring-2 focus:ring-green-200" placeholder="Your name"><label class="text-sm font-semibold">Profile picture</label><input id="avatarInput" type="file" accept="image/*" class="w-full border rounded-xl p-3 mt-1 mb-4 text-sm"><button id="saveProfile" class="btn bg-accent text-white rounded-xl px-5 py-3 font-bold w-full">Save profile</button><p class="text-xs text-gray-400 mt-3">Use a picture you have permission to share.</p></div></div>
+<div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm px-4 py-3 rounded-xl shadow-xl opacity-0 pointer-events-none transition z-[60]"></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="app.js"></script>
+</body></html>
