@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ninety thousand Acres Team</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { brand: 'var(--brand)' } } } };
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+  <style>
+    :root { --brand:#2563eb; }
+    body { background:#f8fafc; }
+    .glass { background:rgba(255,255,255,.88); backdrop-filter:blur(16px); }
+    .scrollbar::-webkit-scrollbar { width:6px; height:6px; }
+    .scrollbar::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:99px; }
+    .active-tab { color:var(--brand); background:#eff6ff; }
+    .message img { max-height:220px; }
+  </style>
+</head>
+<body class="text-slate-800">
+  <header class="sticky top-0 z-30 border-b bg-white/90 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
+      <div class="grid h-10 w-10 place-items-center rounded-2xl bg-brand text-xl text-white shadow-lg">🌾</div>
+      <div class="min-w-0 flex-1"><h1 class="truncate text-lg font-extrabold">Ninety thousand Acres Team</h1><p class="text-xs text-slate-500">Connect, share and grow together</p></div>
+      <label class="hidden cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-sm sm:flex">🎨 <input id="themeColor" type="color" class="h-5 w-5 cursor-pointer border-0 bg-transparent" value="#2563eb"></label>
+      <button id="profileBtn" class="flex items-center gap-2 rounded-full border bg-white p-1 pr-3 shadow-sm"><img id="headerAvatar" class="h-8 w-8 rounded-full object-cover" src="https://api.dicebear.com/8.x/initials/svg?seed=User"><span id="headerName" class="hidden max-w-24 truncate text-sm font-semibold sm:block">User</span></button>
+    </div>
+  </header>
+
+  <main class="mx-auto grid max-w-7xl gap-5 p-4 lg:grid-cols-[220px_1fr_260px]">
+    <aside class="glass hidden h-fit rounded-2xl border p-3 shadow-sm lg:block">
+      <nav id="nav" class="space-y-1">
+        <button data-view="chat" class="active-tab w-full rounded-xl px-4 py-3 text-left font-semibold">💬 Chat</button>
+        <button data-view="forum" class="w-full rounded-xl px-4 py-3 text-left font-semibold">🗣️ Forum</button>
+        <button data-view="groups" class="w-full rounded-xl px-4 py-3 text-left font-semibold">👥 Groups</button>
+      </nav>
+      <div class="mt-8 rounded-xl bg-slate-50 p-3 text-xs text-slate-500">Tip: Use the 🌐 button on any message to translate it to English.</div>
+    </aside>
+
+    <section class="min-w-0">
+      <div class="mb-3 flex gap-2 overflow-x-auto lg:hidden" id="mobileNav">
+        <button data-view="chat" class="active-tab whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold">💬 Chat</button><button data-view="forum" class="whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold">🗣️ Forum</button><button data-view="groups" class="whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold">👥 Groups</button>
+      </div>
+      <div id="appView"></div>
+    </section>
+
+    <aside class="glass hidden h-fit rounded-2xl border p-4 shadow-sm lg:block"><div class="mb-3 flex items-center justify-between"><h2 class="font-bold">Online now</h2><span id="onlineCount" class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">0</span></div><div id="onlineUsers" class="space-y-3"></div></aside>
+  </main>
+
+  <div id="profileModal" class="fixed inset-0 z-50 hidden place-items-center bg-slate-900/50 p-4"><form id="profileForm" class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"><div class="mb-5 flex items-center justify-between"><h2 class="text-xl font-bold">Your profile</h2><button type="button" data-close="profileModal" class="text-2xl text-slate-400">×</button></div><div class="mb-4 flex items-center gap-4"><img id="modalAvatar" class="h-16 w-16 rounded-full object-cover" src=""><label class="cursor-pointer rounded-xl border px-3 py-2 text-sm font-semibold">Change photo<input id="avatarInput" type="file" accept="image/*" class="hidden"></label></div><label class="mb-4 block text-sm font-semibold">Display name<input id="nameInput" required maxlength="40" class="mt-1 w-full rounded-xl border px-3 py-3 outline-none focus:border-brand"></label><button class="w-full rounded-xl bg-brand py-3 font-bold text-white">Save profile</button></form></div>
+
+  <div id="topicModal" class="fixed inset-0 z-50 hidden place-items-center bg-slate-900/50 p-4"><form id="topicForm" class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"><div class="mb-5 flex items-center justify-between"><h2 class="text-xl font-bold">Create forum topic</h2><button type="button" data-close="topicModal" class="text-2xl text-slate-400">×</button></div><input id="topicTitle" required placeholder="Topic title" class="mb-3 w-full rounded-xl border px-3 py-3"><textarea id="topicDescription" required placeholder="Describe your topic..." class="mb-4 min-h-32 w-full rounded-xl border px-3 py-3"></textarea><button class="w-full rounded-xl bg-brand py-3 font-bold text-white">Publish topic</button></form></div>
+
+  <div id="groupModal" class="fixed inset-0 z-50 hidden place-items-center bg-slate-900/50 p-4"><form id="groupForm" class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"><div class="mb-5 flex items-center justify-between"><h2 class="text-xl font-bold">Create group</h2><button type="button" data-close="groupModal" class="text-2xl text-slate-400">×</button></div><input id="groupName" required maxlength="50" placeholder="Group name" class="mb-3 w-full rounded-xl border px-3 py-3"><textarea id="groupDescription" placeholder="What is this group about?" class="mb-4 w-full rounded-xl border px-3 py-3"></textarea><button class="w-full rounded-xl bg-brand py-3 font-bold text-white">Create group</button></form></div>
+
+  <div id="toast" class="fixed bottom-5 left-1/2 z-[60] hidden -translate-x-1/2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-xl"></div>
+  <script src="app.js"></script>
+</body>
+</html>
