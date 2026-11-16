@@ -2,457 +2,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ninety thousand Acres Team</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <title>Ninety thousand Acres Team</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-<style>
-:root {
-  --accent:#16a34a;
-  --accent-rgb:22,163,74;
-}
-* { box-sizing:border-box; }
-body { background:#f3f5f7;color:#17202a; }
-.accent-bg { background:var(--accent); }
-.accent-text { color:var(--accent); }
-.nav-active { color:var(--accent);background:rgba(var(--accent-rgb),.1); }
-.panel { background:white;border:1px solid #e8edf0;border-radius:18px; }
-.soft-shadow { box-shadow:0 8px 28px rgba(15,23,42,.06); }
-.view { display:none; }
-.view.active { display:block; }
-.chat-scroll { height:min(56vh,560px);overflow-y:auto; }
-.message-bubble { max-width:min(82%,560px);overflow-wrap:anywhere; }
-.avatar { width:40px;height:40px;object-fit:cover;border-radius:50%;background:#e5e7eb; }
-.avatar-sm { width:32px;height:32px;object-fit:cover;border-radius:50%;background:#e5e7eb; }
-.btn { border-radius:12px;padding:10px 14px;font-weight:600;transition:.15s; }
-.btn:active { transform:scale(.98); }
-.btn-primary { color:white;background:var(--accent); }
-.btn-muted { background:#f1f5f9;color:#334155; }
-.field { width:100%;border:1px solid #dbe2e8;border-radius:12px;padding:11px 13px;outline:none;background:white; }
-.field:focus { border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.12); }
-.emoji { font-size:21px;padding:5px;border-radius:8px; }
-.online-dot { width:9px;height:9px;border-radius:50%;background:#22c55e;border:2px solid white; }
-.spinner { width:18px;height:18px;border:2px solid #ffffff66;border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block; }
-@keyframes spin { to { transform:rotate(360deg); } }
-@media(min-width:900px) {
-  .app-shell { max-width:1440px;margin:auto; }
-}
-</style>
+  <style>
+    body { background:#0b1220; color:#e5e7eb; }
+    .panel { background:#172235; border:1px solid #29374c; }
+    .active { background:#2563eb!important; color:white!important; }
+    button { transition:.2s; }
+    button:hover { opacity:.85; }
+    .message { overflow-wrap:anywhere; }
+    input, textarea, select {
+      background:#0b1220!important;
+      color:white!important;
+      border:1px solid #334155!important;
+    }
+    .hidden-view { display:none!important; }
+    img { max-width:100%; }
+  </style>
 </head>
 
-<body>
-
-<!-- LOGIN / REGISTER -->
-
-<div id="authScreen" class="min-h-screen flex items-center justify-center p-4">
-  <div class="panel soft-shadow w-full max-w-md p-7">
-
-    <div class="w-14 h-14 rounded-2xl accent-bg text-white flex items-center justify-center text-2xl mb-4">
-      <i class="fa-solid fa-people-group"></i>
+<body class="min-h-screen">
+  <header class="panel p-4 flex justify-between items-center sticky top-0 z-20">
+    <div>
+      <h1 class="font-bold text-lg">🌿 Ninety thousand Acres Team</h1>
+      <p class="text-xs text-gray-400">Connect • Share • Community</p>
     </div>
-
-    <h1 class="text-2xl font-extrabold">
-      Ninety thousand Acres Team
-    </h1>
-
-    <p class="text-slate-500 mt-2 mb-6">
-      Connect, share and build community together.
-    </p>
-
-    <div class="space-y-3">
-
-      <input id="authName" class="field"
-        placeholder="Your display name (for new account)"
-        maxlength="40">
-
-      <input id="authEmail" class="field"
-        type="email" placeholder="Email address">
-
-      <input id="authPassword" class="field"
-        type="password" placeholder="Password">
-
-      <button id="signInBtn" class="btn btn-primary w-full">
-        Sign in
+    <div class="flex gap-3 items-center">
+      <span id="onlineCount" class="text-xs text-green-400">Connecting...</span>
+      <button onclick="showView('profile')" aria-label="Profile">
+        <i class="fa-solid fa-user-circle text-2xl"></i>
       </button>
-
-      <button id="signUpBtn" class="btn btn-muted w-full">
-        Create account
-      </button>
-
-      <p id="authMessage" class="text-sm text-center text-rose-600"></p>
-    </div>
-
-    <p class="text-xs text-slate-400 mt-5">
-      Secured by Firebase Authentication.
-    </p>
-
-  </div>
-</div>
-
-
-<!-- MAIN APPLICATION -->
-
-<div id="appScreen" class="hidden min-h-screen app-shell">
-
-  <!-- TOP HEADER -->
-
-  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200">
-
-    <div class="px-4 py-3 flex items-center justify-between gap-3">
-
-      <div class="flex items-center gap-3 min-w-0">
-
-        <div class="w-10 h-10 rounded-xl accent-bg text-white flex items-center justify-center">
-          <i class="fa-solid fa-people-group"></i>
-        </div>
-
-        <div class="min-w-0">
-          <h1 class="font-extrabold text-base sm:text-lg truncate">
-            Ninety thousand Acres Team
-          </h1>
-          <p class="text-xs text-slate-500">Community space</p>
-        </div>
-
-      </div>
-
-      <div class="flex items-center gap-2">
-
-        <label class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center cursor-pointer">
-          <i class="fa-solid fa-palette"></i>
-          <input id="themeColor" type="color"
-            value="#16a34a"
-            class="absolute opacity-0 w-1 h-1">
-        </label>
-
-        <button id="profileTopBtn"
-          class="flex items-center gap-2 rounded-full hover:bg-slate-100 p-1">
-
-          <img id="topAvatar" class="avatar-sm" alt="Profile">
-          <span id="topName"
-            class="hidden sm:block text-sm font-semibold max-w-28 truncate">
-            Profile
-          </span>
-
-        </button>
-
-        <button id="signOutBtn"
-          class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600">
-          <i class="fa-solid fa-right-from-bracket"></i>
-        </button>
-
-      </div>
     </div>
   </header>
 
+  <main class="max-w-5xl mx-auto p-3 pb-24">
+    <section id="loading" class="text-center py-16">
+      <i class="fa-solid fa-spinner fa-spin text-3xl"></i>
+      <p class="mt-3">Preparing your community account...</p>
+    </section>
 
-  <div class="grid grid-cols-1 lg:grid-cols-[230px_minmax(0,1fr)] gap-4 p-3 sm:p-5">
-
-    <!-- SIDEBAR -->
-
-    <aside class="panel soft-shadow p-3 h-fit lg:sticky lg:top-20">
-
-      <div class="flex items-center gap-3 px-2 py-3 mb-2">
-
-        <img id="sideAvatar" class="avatar" alt="Profile">
-
-        <div class="min-w-0">
-          <p id="sideName" class="font-bold truncate">Member</p>
-          <p class="text-xs text-emerald-600">Community member</p>
-        </div>
-
-      </div>
-
-      <nav class="grid grid-cols-4 lg:grid-cols-1 gap-1">
-
-        <button class="nav-btn nav-active text-sm rounded-xl p-3 text-left"
-          data-view="global">
-          <i class="fa-solid fa-comments w-6"></i>
-          <span class="hidden sm:inline">Global chat</span>
-          <span class="sm:hidden">Chat</span>
+    <section id="appContent" class="hidden-view">
+      <nav class="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-4">
+        <button class="panel p-3 rounded-lg active" onclick="showView('chat',this)">
+          <i class="fa-solid fa-comments"></i><br><small>Chat</small>
         </button>
-
-        <button class="nav-btn text-sm rounded-xl p-3 text-left"
-          data-view="forum">
-          <i class="fa-solid fa-comments-dollar w-6"></i>
-          <span class="hidden sm:inline">Forum</span>
-          <span class="sm:hidden">Forum</span>
+        <button class="panel p-3 rounded-lg" onclick="showView('forum',this)">
+          <i class="fa-solid fa-users"></i><br><small>Forum</small>
         </button>
-
-        <button class="nav-btn text-sm rounded-xl p-3 text-left"
-          data-view="groups">
-          <i class="fa-solid fa-people-group w-6"></i>
-          <span class="hidden sm:inline">Groups</span>
-          <span class="sm:hidden">Groups</span>
+        <button class="panel p-3 rounded-lg" onclick="showView('groups',this)">
+          <i class="fa-solid fa-people-group"></i><br><small>Groups</small>
         </button>
-
-        <button class="nav-btn text-sm rounded-xl p-3 text-left"
-          data-view="profile">
-          <i class="fa-solid fa-user-gear w-6"></i>
-          <span class="hidden sm:inline">My profile</span>
-          <span class="sm:hidden">Profile</span>
+        <button class="panel p-3 rounded-lg" onclick="showView('online',this)">
+          <i class="fa-solid fa-circle-user"></i><br><small>Online</small>
         </button>
-
+        <button class="panel p-3 rounded-lg" onclick="showView('profile',this)">
+          <i class="fa-solid fa-id-card"></i><br><small>Profile</small>
+        </button>
+        <button class="panel p-3 rounded-lg" onclick="showView('settings',this)">
+          <i class="fa-solid fa-gear"></i><br><small>Settings</small>
+        </button>
       </nav>
 
-      <!-- ONLINE MEMBERS -->
-
-      <div class="border-t mt-4 pt-4">
-
-        <div class="flex justify-between items-center px-2 mb-3">
-          <h3 class="font-bold text-sm">Online now</h3>
-          <span id="onlineCount"
-            class="text-xs bg-emerald-50 text-emerald-700 rounded-full px-2 py-1">
-            0
-          </span>
-        </div>
-
-        <div id="onlineUsers" class="space-y-3 max-h-72 overflow-y-auto px-2">
-          <p class="text-xs text-slate-400">Loading members...</p>
-        </div>
-
-      </div>
-
-    </aside>
-
-
-    <!-- MAIN CONTENT -->
-
-    <main class="min-w-0">
-
       <!-- GLOBAL CHAT -->
+      <section id="chat" class="view panel rounded-xl p-4">
+        <h2 class="font-bold text-xl mb-3">Global Community Chat</h2>
+        <div id="chatMessages" class="h-96 overflow-y-auto space-y-3 mb-4"></div>
 
-      <section id="view-global" class="view active">
+        <div class="flex gap-2 mb-2">
+          <button onclick="toggleEmoji()" class="panel p-3 rounded-lg">
+            <i class="fa-regular fa-face-smile"></i>
+          </button>
+          <button onclick="document.getElementById('chatImage').click()"
+            class="panel p-3 rounded-lg">
+            <i class="fa-solid fa-image"></i>
+          </button>
+          <input id="chatImage" type="file" accept="image/*" class="hidden"
+            onchange="uploadChatImage(this)">
+        </div>
 
-        <div class="panel soft-shadow overflow-hidden">
-
-          <div class="p-4 border-b flex justify-between items-center">
-
-            <div>
-              <h2 class="font-extrabold text-lg">Community chat</h2>
-              <p class="text-xs text-slate-500">
-                Messages are shared with all members
-              </p>
-            </div>
-
-            <span class="text-xs text-emerald-600">
-              <i class="fa-solid fa-circle text-[8px]"></i> Live
-            </span>
-
+        <div id="emojiPicker" class="hidden panel p-3 rounded-lg mb-2">
+          <div class="grid grid-cols-8 gap-2 text-xl">
+            <button onclick="addEmoji('😀')">😀</button>
+            <button onclick="addEmoji('😂')">😂</button>
+            <button onclick="addEmoji('😍')">😍</button>
+            <button onclick="addEmoji('🥰')">🥰</button>
+            <button onclick="addEmoji('😎')">😎</button>
+            <button onclick="addEmoji('🔥')">🔥</button>
+            <button onclick="addEmoji('❤️')">❤️</button>
+            <button onclick="addEmoji('👍')">👍</button>
+            <button onclick="addEmoji('🙏')">🙏</button>
+            <button onclick="addEmoji('🎉')">🎉</button>
+            <button onclick="addEmoji('🌿')">🌿</button>
+            <button onclick="addEmoji('💯')">💯</button>
+            <button onclick="addEmoji('😢')">😢</button>
+            <button onclick="addEmoji('🤝')">🤝</button>
+            <button onclick="addEmoji('⭐')">⭐</button>
+            <button onclick="addEmoji('🚀')">🚀</button>
           </div>
+        </div>
 
-          <div id="globalMessages" class="chat-scroll p-4 space-y-4">
-            <p class="text-center text-sm text-slate-400 py-10">
-              Loading chat...
-            </p>
-          </div>
-
-          <div class="border-t p-3 sm:p-4">
-
-            <div id="globalImagePreview"
-              class="hidden mb-2 text-sm text-slate-500"></div>
-
-            <div class="flex items-end gap-2">
-
-              <label class="btn btn-muted cursor-pointer">
-                <i class="fa-regular fa-image"></i>
-                <input id="globalImage" type="file"
-                  accept="image/*" class="hidden">
-              </label>
-
-              <div class="flex-1 relative">
-
-                <textarea id="globalText"
-                  class="field resize-none pr-12"
-                  rows="1" maxlength="2000"
-                  placeholder="Write a message..."></textarea>
-
-                <button class="absolute right-2 bottom-2 text-xl"
-                  data-emoji-target="globalText">
-                  😊
-                </button>
-
-              </div>
-
-              <button id="globalSend" class="btn btn-primary">
-                <i class="fa-solid fa-paper-plane"></i>
-                <span class="hidden sm:inline ml-1">Send</span>
-              </button>
-
-            </div>
-
-            <div id="globalEmojiTray"
-              class="hidden pt-2 flex flex-wrap gap-1"></div>
-
-          </div>
-
+        <div class="flex gap-2">
+          <input id="chatInput" class="flex-1 rounded-lg p-3"
+            placeholder="Write a message..." maxlength="2000">
+          <button onclick="sendMessage()"
+            class="bg-blue-600 px-5 rounded-lg">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
         </div>
       </section>
-
 
       <!-- FORUM -->
-
-      <section id="view-forum" class="view">
-
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-
-          <div>
-            <h2 class="text-xl font-extrabold">Community forum</h2>
-            <p class="text-sm text-slate-500">
-              Create topics and keep discussions available.
-            </p>
-          </div>
-
-          <button id="newTopicBtn" class="btn btn-primary">
-            <i class="fa-solid fa-plus mr-1"></i> New topic
-          </button>
-
-        </div>
-
-        <div id="topicForm"
-          class="panel p-4 mb-4 hidden space-y-3">
-
-          <h3 class="font-bold">Create a topic</h3>
-
-          <input id="topicTitle" class="field"
-            placeholder="Topic title" maxlength="120">
-
-          <textarea id="topicDescription"
-            class="field" rows="3"
-            placeholder="Describe your topic..."
-            maxlength="5000"></textarea>
-
-          <div class="flex gap-2 justify-end">
-            <button id="cancelTopic" class="btn btn-muted">Cancel</button>
-            <button id="saveTopic" class="btn btn-primary">Publish topic</button>
-          </div>
-
-        </div>
-
-        <div id="topicsList" class="space-y-3">
-          <p class="text-slate-400 text-sm">Loading topics...</p>
-        </div>
-
-        <div id="topicDetail" class="hidden mt-4"></div>
-
+      <section id="forum" class="view hidden-view panel rounded-xl p-4">
+        <h2 class="font-bold text-xl mb-3">Community Forum</h2>
+        <input id="topicTitle" class="w-full rounded-lg p-3 mb-2"
+          placeholder="Topic title">
+        <textarea id="topicDescription" class="w-full rounded-lg p-3 mb-2"
+          placeholder="Describe your topic"></textarea>
+        <button onclick="createTopic()" class="bg-blue-600 p-3 rounded-lg w-full">
+          Create Topic
+        </button>
+        <div id="forumTopics" class="mt-5 space-y-3"></div>
       </section>
-
 
       <!-- GROUPS -->
-
-      <section id="view-groups" class="view">
-
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-
-          <div>
-            <h2 class="text-xl font-extrabold">My groups</h2>
-            <p class="text-sm text-slate-500">
-              Create a group for up to 40 members.
-            </p>
-          </div>
-
-          <button id="createGroupBtn" class="btn btn-primary">
-            <i class="fa-solid fa-plus mr-1"></i> Create group
+      <section id="groups" class="view hidden-view panel rounded-xl p-4">
+        <h2 class="font-bold text-xl mb-3">Community Groups</h2>
+        <input id="groupName" class="w-full rounded-lg p-3 mb-2"
+          placeholder="New group name">
+        <button onclick="createGroup()" class="bg-blue-600 p-3 rounded-lg w-full">
+          Create Group
+        </button>
+        <div id="groupList" class="mt-5 space-y-3"></div>
+        <div id="groupRoom" class="hidden-view mt-5">
+          <button onclick="closeGroup()" class="text-blue-400 mb-3">
+            ← Back to groups
           </button>
-
-        </div>
-
-        <div id="groupForm"
-          class="panel p-4 mb-4 hidden space-y-3">
-
-          <h3 class="font-bold">Create a group</h3>
-
-          <input id="groupName" class="field"
-            placeholder="Group name" maxlength="60">
-
-          <textarea id="groupDescription"
-            class="field" rows="2"
-            placeholder="What is this group about?"
-            maxlength="500"></textarea>
-
-          <div class="flex justify-end gap-2">
-            <button id="cancelGroup" class="btn btn-muted">Cancel</button>
-            <button id="saveGroup" class="btn btn-primary">Create group</button>
+          <h3 id="groupRoomTitle" class="font-bold text-lg mb-3"></h3>
+          <div id="groupMessages" class="h-72 overflow-y-auto space-y-3 mb-3"></div>
+          <div class="flex gap-2">
+            <input id="groupMessageInput" class="flex-1 rounded-lg p-3"
+              placeholder="Group message...">
+            <button onclick="sendGroupMessage()" class="bg-blue-600 px-4 rounded-lg">
+              Send
+            </button>
           </div>
-
+          <button onclick="document.getElementById('groupImage').click()"
+            class="panel p-3 rounded-lg mt-2">Upload image</button>
+          <input id="groupImage" type="file" accept="image/*" class="hidden"
+            onchange="uploadGroupImage(this)">
         </div>
-
-        <div id="groupsList"
-          class="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
-          <p class="text-sm text-slate-400">Loading groups...</p>
-        </div>
-
-        <div id="groupRoom" class="hidden mt-4 panel overflow-hidden"></div>
-
       </section>
 
+      <!-- ONLINE -->
+      <section id="online" class="view hidden-view panel rounded-xl p-4">
+        <h2 class="font-bold text-xl mb-3">Online Community Members</h2>
+        <div id="onlineUsers" class="space-y-3"></div>
+      </section>
 
       <!-- PROFILE -->
-
-      <section id="view-profile" class="view">
-
-        <div class="panel soft-shadow p-5 max-w-2xl">
-
-          <h2 class="text-xl font-extrabold mb-1">Edit profile</h2>
-
-          <p class="text-sm text-slate-500 mb-5">
-            Update how other members see you.
-          </p>
-
-          <div class="flex items-center gap-4 mb-5">
-
-            <img id="profilePreview"
-              class="w-20 h-20 rounded-full object-cover bg-slate-100"
-              alt="Profile preview">
-
-            <label class="btn btn-muted cursor-pointer">
-              Change picture
-              <input id="profileImage" type="file"
-                accept="image/*" class="hidden">
-            </label>
-
-          </div>
-
-          <label class="block text-sm font-semibold mb-1">
-            Display name
-          </label>
-
-          <input id="profileName"
-            class="field mb-4" maxlength="40">
-
-          <label class="block text-sm font-semibold mb-1">
-            Email
-          </label>
-
-          <input id="profileEmail"
-            class="field mb-4 bg-slate-50" disabled>
-
-          <button id="saveProfile" class="btn btn-primary">
-            Save profile
-          </button>
-
-          <p id="profileMessage" class="text-sm mt-3"></p>
-
+      <section id="profile" class="view hidden-view panel rounded-xl p-4">
+        <h2 class="font-bold text-xl mb-4">Your Profile</h2>
+        <div class="text-center">
+          <img id="profileImage" src="" alt="Profile"
+            class="w-24 h-24 rounded-full object-cover mx-auto mb-3">
+          <h3 id="profileUsername" class="font-bold text-lg"></h3>
+          <p class="text-gray-400 text-sm mb-4">Automatically generated username</p>
         </div>
-
+        <label class="block mb-2">Display name</label>
+        <input id="displayName" class="w-full rounded-lg p-3 mb-3"
+          maxlength="40">
+        <button onclick="saveProfile()" class="bg-blue-600 p-3 rounded-lg w-full">
+          Save Profile
+        </button>
+        <button onclick="document.getElementById('profileUpload').click()"
+          class="panel p-3 rounded-lg w-full mt-3">
+          Change Profile Picture
+        </button>
+        <input id="profileUpload" type="file" accept="image/*" class="hidden"
+          onchange="uploadProfileImage(this)">
       </section>
 
-    </main>
-  </div>
+      <!-- SETTINGS -->
+      <section id="settings" class="view hidden-view panel rounded-xl p-4">
+        <h2 class="font-bold text-xl mb-4">Settings</h2>
+        <label class="block mb-2">Community theme color</label>
+        <input id="themeColor" type="color" value="#2563eb"
+          onchange="changeTheme(this.value)" class="w-full h-12">
+        <p class="text-gray-400 text-sm mt-4">
+          Your community username is generated automatically.
+          No email or password is required.
+        </p>
+      </section>
+    </section>
+  </main>
 
-  <footer class="text-center text-xs text-slate-400 px-4 pb-6">
-    Ninety thousand Acres Team · Be kind and keep the community safe.
-  </footer>
-
-</div>
-
-<div id="toast"
-  class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 hidden bg-slate-900 text-white text-sm px-4 py-3 rounded-xl shadow-xl">
-</div>
-
-<script type="module" src="./app.js"></script>
-
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
